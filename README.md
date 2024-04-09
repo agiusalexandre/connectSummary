@@ -19,3 +19,6 @@ copy with the name 'dialog.wav'
 
 ## You're ready, Run it !
 Run your notebook the result will in the Result.txt file inside your ['LEARNERS3BUCKETNAMEAUDIO'] bucket
+
+## Customization
+Update your template file instruction to customize the result content !
