@@ -22,3 +22,8 @@ Run your notebook the result will in the Result.txt file inside your ['LEARNERS3
 
 ## Customization
 Update your template file instruction to customize the result content !
+
+## Integration with Amazon Connect contact Lens
+- Enable Amazon connect contact Lens [https://docs.aws.amazon.com/connect/latest/adminguide/enable-analytics.html]
+- Use Amazon s3 trigger to invoke your lambda function [https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example.html] ( Update your jupiter NB )
+
