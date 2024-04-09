@@ -1,0 +1,12 @@
+
+{
+    "version": 0.1,
+    "sentiment": "positive",
+    "issues": [
+        {
+            "topic": "charges",
+            "summary": "pre authorization is a standard procedure to cover any incidental expenses"
+        }
+    ],
+    "resume": "spk_0 is looking to book a room for his 10th wedding anniversary at the Crystal Heights Hotel in Singapore. Spk_1 offers several room types that offer stunning views of the city skyline and the fictional Sapphire Bay. Spk_0 chooses a diamond suite with a sapphire bay view for October 10th to 17th. The package includes breakfast, complimentary access to the moonlit pool and star deck, a one time spa treatment for two, and a special romantic dinner at our cloud nine restaurant. Spk_0 needs to provide personal information for the reservation, including his full name, contact details, and a credit card for preauthorizations. A pre authorization of $1000 will be held on his card, which will be released upon checkout. There is a 10% service charge and a 7% fantasy tax applied to the room rate."
+}
