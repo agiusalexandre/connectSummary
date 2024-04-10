@@ -4,7 +4,7 @@ The objective of this stack is to deploy Serverless Components in order to trigg
 
 ## Simple Deployment
 
-1. Install AWS SAM CLI.
+1. Install AWS SAM CLI. [Deploy with AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html)
 2. Navigate to the `cfn` directory.
 3. Run `sam build`.
 4. To deploy the component on your AWS Account, run `sam deploy --guided`.
