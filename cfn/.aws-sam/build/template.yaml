@@ -1,0 +1,171 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: An AWS Serverless Application Model template to summarize Amazon connect
+  audio file
+Resources:
+  audioBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketName:
+        Fn::Sub: audiobucket${AWS::AccountId}
+  TranscribeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description:
+        Fn::Sub:
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: TranscribeFunction
+      CodeUri: TranscribeFunction
+      Handler: handler.lambda_handler
+      Runtime: python3.11
+      MemorySize: 128
+      Timeout: 120
+      Tracing: Active
+      Environment:
+        Variables:
+          S3BUCKETNAMETEXT:
+            Ref: TranscriptionBucket
+          TRANSCRIPTIONBUCKET_BUCKET_NAME:
+            Ref: TranscriptionBucket
+          TRANSCRIPTIONBUCKET_BUCKET_ARN:
+            Fn::GetAtt:
+            - TranscriptionBucket
+            - Arn
+      EventInvokeConfig:
+        MaximumEventAgeInSeconds: 21600
+        MaximumRetryAttempts: 2
+      Layers:
+      - arn:aws:lambda:us-east-1:284474675936:layer:dlai-bedrock-jinja-layer:1
+      PackageType: Zip
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Action:
+          - bedrock:InvokeModel
+          Resource: arn:aws:bedrock:*::foundation-model/*
+          Effect: Allow
+        - Action:
+          - s3:GetObject
+          - s3:PutObject
+          Resource: '*'
+          Effect: Allow
+        - Action:
+          - transcribe:StartTranscriptionJob
+          Resource: '*'
+          Effect: Allow
+        - Action:
+          - logs:CreateLogGroup
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+          Resource: '*'
+          Effect: Allow
+      Events:
+        audioBucket:
+          Type: S3
+          Properties:
+            Bucket:
+              Ref: audioBucket
+            Events:
+            - s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                - Name: suffix
+                  Value: wav
+      SnapStart:
+        ApplyOn: None
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: Auto
+    Metadata:
+      SamResourceId: TranscribeFunction
+  LambdaPermissionForTranscriptionBucket:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+        - TranscribeFunction
+        - Arn
+      Principal: s3.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+        - TranscriptionBucket
+        - Arn
+  TranscribeFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName:
+        Fn::Sub: /aws/lambda/${TranscribeFunction}
+  TranscriptionBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketName:
+        Fn::Sub: transcriptionbucket${AWS::AccountId}
+  SummarizeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description:
+        Fn::Sub:
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: SummarizeFunction
+      CodeUri: SummarizeFunction
+      Handler: handler.lambda_handler
+      Runtime: python3.11
+      Architectures:
+      - x86_64
+      EphemeralStorage:
+        Size: 512
+      EventInvokeConfig:
+        MaximumEventAgeInSeconds: 21600
+        MaximumRetryAttempts: 2
+      Layers:
+      - arn:aws:lambda:us-east-1:284474675936:layer:dlai-bedrock-jinja-layer:1
+      PackageType: Zip
+      MemorySize: 128
+      Timeout: 120
+      Tracing: Active
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Action:
+          - bedrock:InvokeModel
+          Resource: arn:aws:bedrock:*::foundation-model/*
+          Effect: Allow
+        - Action:
+          - s3:GetObject
+          - s3:PutObject
+          Resource: '*'
+          Effect: Allow
+        - Action:
+          - transcribe:StartTranscriptionJob
+          Resource: '*'
+          Effect: Allow
+        - Action:
+          - logs:CreateLogGroup
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+          Resource: '*'
+          Effect: Allow
+      Events:
+        TranscriptionBucket:
+          Type: S3
+          Properties:
+            Bucket:
+              Ref: TranscriptionBucket
+            Events:
+            - s3:ObjectCreated:*
+    Metadata:
+      SamResourceId: SummarizeFunction
+  SummarizeFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName:
+        Fn::Sub: /aws/lambda/${SummarizeFunction}
