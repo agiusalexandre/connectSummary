@@ -12,7 +12,7 @@ The objective of this stack is to deploy Serverless Components in order to trigg
 6. Use AWS CLI to push objects to an AWS bucket.
 7. Retrieve the result.
 
-## Only For Data Scientists
+## Only If Your are a Data Scientists ( Depoy through Jupyter Notebook )
 
 1. Create two buckets:
     - One bucket to store your .wav files.
@@ -25,18 +25,18 @@ Update your OS variables (`GenerateAmazonConnectCallSummary.ipynb`):
 - `os.environ['LAMBDALAYERVERSIONARN']`
 - `os.environ['LEARNERS3BUCKETNAMEAUDIO']`
 
-## Create a Jupyter Notebook Environment
+### Create a Jupyter Notebook Environment
 - [Amazon SageMaker Studio Classic](https://docs.aws.amazon.com/sagemaker/latest/dg/notebooks.html)
 
-## Create a Dialog with Your Amazon Connect Instance
+### Create a Dialog with Your Amazon Connect Instance
 - Copy the dialog with the name 'dialog.wav'.
 
-## You're Ready, Run it!
+### You're Ready, Run it!
 Run your notebook. The result will be in the `Result.txt` file inside your `LEARNERS3BUCKETNAMEAUDIO` bucket.
 
-## Customization
+### Customization
 Update your template file instructions to customize the result content.
 
-## Integration with Amazon Connect Contact Lens
+### Integration with Amazon Connect Contact Lens
 - Enable Amazon Connect Contact Lens. Refer to [AWS documentation](https://docs.aws.amazon.com/connect/latest/adminguide/enable-analytics.html).
 - Use Amazon S3 trigger to invoke your Lambda function. Refer to [AWS documentation](https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example.html). Update your Jupyter Notebook accordingly.
