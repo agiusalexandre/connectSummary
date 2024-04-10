@@ -1,6 +1,7 @@
 # Create a Serverless Pipeline to Ingest Amazon Connect Audio
 
 The objective of this stack is to deploy Serverless Components in order to trigger Lambda functions to transcribe and summarize audio calls from Amazon Connect solution!
+![Architecture diagram](images/architecture.png)
 
 ## Simple Deployment
 
